@@ -1,0 +1,171 @@
+<?
+include("gz.php");
+header("Cache-Control: no-cache");
+if ($ver=="wml")header ("Content-type:text/vnd.wap.wml; charset=utf-8");
+else header("Content-Type:text/html; charset=UTF-8");
+
+require("inc.php");
+$link = connect_db();
+list($row, $id, $ps, $fsize1, $fsize2) = check_login($link);
+require("version.php");
+
+
+if($rm==10) $takep="&amp;pwd=$pwd&amp;ref=$ref";
+else if($mod=="privat") $takep="&amp;mod=$mod&amp;ref=$ref";
+else $takep="&amp;ref=$ref";
+
+switch($mod) {
+
+case 'redact';
+if ($ver=="wml"){
+
+echo $xml;
+echo $dtd;
+echo "<wml>\n";
+echo "<head><meta http-equiv=\"Cache-Control\" content=\"no-cache\" forua=\"true\"/></head>\n";
+echo "<card id=\"nastr\" title=\"Raspolozenje\">\n";
+echo "<p align=\"center\">";
+}else{
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+echo "<head><link rel=\"stylesheet\" type=\"text/css\" href=\"".$row["css"]."\">";
+echo "<title>Raspolozenje</title>";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body>";
+echo "<div align=\"center\">";
+if((isset($rm))&&($rm!="")) echo "<form method=\"POST\" action=\"nood.php?$ses&amp;mod=rew&amp;rm=$rm$takep\" name=\"auth\">\n";
+else echo "<form method=\"POST\" action=\"nood.php?$ses&amp;mod=rew$takep\" name=\"auth\">\n";
+}
+echo $fsize1;
+echo "<b>Vase Raspolozenje:</b><br/>";
+echo $fsize2;
+$nastroi=$row['nastroi'];
+echo "<input name=\"nastroi\" maxlength=\"20\" value=\"$nastroi\"/><br/>";
+echo $fsize1;
+echo "*Ostavite prazno polje, ako ste bez raspolozenja!<br/>";
+echo $divide;
+echo $fsize2;
+if ($ver=="wml"){
+echo $fsize1;
+if((isset($rm))&&($rm!="")) echo "<anchor title=\"go\">Izmeni<go href=\"nood.php?$ses&amp;mod=rew&amp;rm=$rm$takep\" method=\"post\">\n";
+else echo "<anchor title=\"go\">Izmeni<go href=\"nood.php?$ses&amp;mod=rew&amp;ref=$ref\" method=\"post\">\n";
+echo "<postfield name=\"nastroi\" value=\"$(nastroi)\"/>\n";
+echo "</go></anchor>\n";
+echo $fsize2;
+echo "<br/>\n";
+}else{
+echo "<input type=\"submit\" value=\"Izmeni\" name=\"enter\"><br/>\n";
+}
+echo $fsize1;
+echo $divide;
+if((isset($rm))&&($rm!="")) echo "Mozete <a href=\"nood.php?$ses&amp;mod=select&amp;rm=$rm$takep\">izabrati</a> rasplozenje sa spiska!<br/>\n";
+else echo "Mozete <a href=\"nood.php?$ses&amp;mod=select&amp;ref=$ref\">Izabrati</a> rasplolozenje sa spiska!<br/>\n";
+echo $fsize2;
+break;
+
+case 'select':
+if ($ver=="wml"){
+echo $xml;
+echo $dtd;
+echo "<wml>\n";
+echo "<head><meta http-equiv=\"Cache-Control\" content=\"no-cache\" forua=\"true\"/></head>\n";
+echo "<card id=\"nastroi\" title=\"Raspolozenje\">\n";
+echo "<p align =\"center\">\n";
+}else{
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+echo "<head><link rel=\"stylesheet\" type=\"text/css\" href=\"".$row["css"]."\">";
+echo "<title>Raspolozenje</title>";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body>";
+echo "<div align=\"center\">";
+if((isset($rm))&&($rm!="")) echo "<form method=\"POST\" action=\"nood.php?mod=rew&amp;$ses&amp;rm=$rm$takep\" name=\"auth\">\n";
+else echo "<form method=\"POST\" action=\"nood.php?$ses&amp;mod=rew&amp;ref=$ref\" name=\"auth\">\n";
+}
+echo $fsize1;
+echo "Pozdrav <b>".$row["user"]."</b>, izaberite raspolozenje:<br/>";
+echo $fsize2;
+echo "<select name=\"nastroi\">";
+echo "<option value=\"".$row["nastroi"]."\">".$row["nastroi"]."</option>
+        <option value=\"0\">[Iskljuci]</option>
+		<option value=\"Dobro\">Dobro</option>
+		<option value=\"Odlicno\">Odlicno</option>
+		<option value=\"Veselo\">Veselo</option>
+		<option value=\"Andjeli\">Andjeli</option>
+		<option value=\"Agresivno\">Agresivno</option>
+		<option value=\"Osamuceno\">Osamuceno</option>
+		<option value=\"Iznenadjeno\">Iznenadjeno</option>
+		<option value=\"Zlo\">Zlo</option>
+		<option value=\"Ljutito\">Ljutito</option>
+		<option value=\"Neispavano\">Neispavano</option>
+		<option value=\"Ogorceno\">Ogorceno</option>
+		<option value=\"Dosadno\">Dosadno</option>
+		<option value=\"Zivo\">Zivo</option>
+		<option value=\"Umorno\">Umorno</option>
+		<option value=\"Zamisljeno\">Zamisljeno</option>
+		<option value=\"Zaposleno\">Zaposleno</option>
+		<option value=\"Drsko\">Drsko</option>
+		<option value=\"Cool\">Cool</option>
+		<option value=\"Smuseno\">Smuseno</option>
+		<option value=\"Hrskavo\">Hrskavo</option>
+		<option value=\"Happy\">Happy</option>
+		<option value=\"Hot\">Hot</option>
+		<option value=\"Psiho\">Psiho</option>
+		<option value=\"Sokirano\">Sokirano</option>
+		<option value=\"Tuzno\">Tuzno</option>
+		<option value=\"Opusteno\">Opusteno</option>
+		<option value=\"Nevino\">Nevino</option>
+        </select><br/>";
+if ($ver=="wml"){
+echo $fsize1;
+if((isset($rm))&&($rm!="")) echo "<anchor title=\"go\">Izmeni<go href=\"nood.php?mod=rew&amp;$ses&amp;rm=$rm$takep\" method=\"post\">";
+else echo "<anchor title=\"go\">Izmeni<go href=\"nood.php?$ses&amp;mod=rew&amp;ref=$ref\" method=\"post\">";
+echo "<postfield name=\"nastroi\" value=\"$(nastroi)\"/></go></anchor>";
+echo $fsize2;
+echo "<br/>";
+}else{
+echo "<input type=\"submit\" value=\"Izmeni\" name=\"enter\"><br/>\n";
+}
+echo $fsize1;
+echo $divide;
+if((isset($rm))&&($rm!="")) echo "Ili napisite <a href=\"nood.php?$ses&amp;mod=redact&amp;rm=$rm$takep\">rucno</a> raspolozenje!<br/>";
+else echo "Ili napisite <a href=\"nood.php?$ses&amp;mod=redact&amp;ref=$ref\">rucno</a> raspolozenje!<br/>";
+echo $fsize2;
+break;
+
+case 'rew':
+$nastroi = check($nastroi);
+if (!ctype_digit($id)) {header("Location: index.php"); die;}
+mysql_query ("Update users set nastroi='".$nastroi."' where id ='".$id."'");
+if ($ver=="wml"){
+echo $xml;
+echo $dtd;
+echo "<wml>\n";
+echo "<head><meta http-equiv=\"Cache-Control\" content=\"no-cache\" forua=\"true\"/></head>\n";
+if((isset($rm))&&($rm!="")) echo "<card id=\"nastroi\" title=\"Ок\" ontimer=\"chat.php?$ses&amp;rm=$rm$takep\"><timer value=\"10\"/>\n";
+else echo "<card id=\"nastroi\" title=\"Raspolozenje\" ontimer=\"cabinet.php?$ses$takep\"><timer value=\"10\"/>\n";
+echo "<p align=\"center\">\n";
+}else{
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+echo "<head><link rel=\"stylesheet\" type=\"text/css\" href=\"".$row["css"]."\">";
+echo "<title>Raspolozenje</title>";
+if((isset($rm))&&($rm!="")) echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"2; URL=chat.php?$ses&amp;rm=$rm$takep\">";
+else echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"2; URL=cabinet.php?$ses$takep\">";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body>";
+echo "<div align=\"center\">";
+}
+echo $fsize1;
+echo "Vase raspolozenje je uspesno izmenjeno!<br/>";
+echo $fsize2;
+break;
+}
+echo $fsize1;
+echo $divide;
+if((isset($rm))&&($rm!="")) echo "<a href=\"chat.php?$ses&amp;rm=$rm$takep\">Chat Soba</a><br/>";
+else echo "<a href=\"cabinet.php?$ses&amp;ref=$ref\">Licni Kabinet</a><br/>";
+echo "<a href=\"enter.php?$ses&amp;ref=$ref\">Hodnik</a>";
+echo $fsize2;
+include("gzip.php");
+if ($ver=="wml") echo "</p></card></wml>";
+else echo "</div></body></html>";
+mysql_close ($link);
+?>
